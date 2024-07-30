@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "i3_scripts"
+version = "0.1.0"
+description = ""
+authors = ["Kevin French <fnivek@gmail.com>"]
+# readme = "README.md"
+# license = "BSD"
+packages = [
+  { include = "i3_scripts" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+i3ipc = "^2.2.1"
+click = "^8.1.7"
+
+[tool.poetry.scripts]
+workspace = 'i3_scripts.workspace:main'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
