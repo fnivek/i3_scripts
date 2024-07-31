@@ -4,7 +4,7 @@ import re
 from argparse import ArgumentParser
 from functools import reduce
 import i3ipc
-from tools import App, Lists, Menu, Sockets
+from i3_focus.tools import App, Lists, Menu, Sockets
 
 parser = ArgumentParser(prog='i3-app-focus.py',
                         description='''

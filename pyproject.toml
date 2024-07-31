@@ -7,7 +7,8 @@ authors = ["Kevin French <fnivek@gmail.com>"]
 # license = "BSD"
 packages = [
   { include = "i3_scripts" },
-  { include = "i3_focus" }
+  { include = "i3_focus" },
+  { include = "i3_focus/tools" }
 ]
 
 [tool.poetry.dependencies]
