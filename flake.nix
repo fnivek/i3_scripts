@@ -10,6 +10,7 @@
       p2ns = forAllSystems (system: poetry2nix.lib.mkPoetry2Nix { pkgs = pkgs.${system}; });
       pypkgs-build-requirements = {
         python-xlib = [ "setuptools-scm" ];
+        argparse = [ "setuptools" ];
       };
       p2n-overrides = forAllSystems (system:
         p2ns.${system}.defaultPoetryOverrides.extend (final: prev:

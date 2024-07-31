@@ -6,7 +6,8 @@ authors = ["Kevin French <fnivek@gmail.com>"]
 # readme = "README.md"
 # license = "BSD"
 packages = [
-  { include = "i3_scripts" }
+  { include = "i3_scripts" },
+  { include = "i3_focus" }
 ]
 
 [tool.poetry.dependencies]
@@ -16,6 +17,10 @@ click = "^8.1.7"
 
 [tool.poetry.scripts]
 workspace = 'i3_scripts.workspace:main'
+focus_history_server = 'i3_focus.history_server:main'
+focus_next = 'i3_focus.focus_next:main'
+focus_last = 'i3_focus.focus_last:main'
+focus_window = 'i3_focus.focus_window:main'
 
 [build-system]
 requires = ["poetry-core"]
