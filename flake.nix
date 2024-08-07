@@ -14,7 +14,7 @@
       };
       p2n-overrides = forAllSystems (system:
         p2ns.${system}.defaultPoetryOverrides.extend (final: prev:
-          builtins.mapAttrs (package: build-requirements: 
+          builtins.mapAttrs (package: build-requirements:
             (builtins.getAttr package prev).overridePythonAttrs (old: {
               buildInputs = (old.buildInputs or [ ]) ++
                 (builtins.map
@@ -35,6 +35,18 @@
           projectDir = self;
           overrides = p2n-override;
         };
+        # Simple script to ensure that only one history server is ever running.
+        focus_history_server_launch = pkgs.${system}.writeShellApplication {
+          name = "focus_history_server_launch";
+          runtimeInputs = [ self.packages.${system}.default ];
+          text = ''
+            # Kill any existing process.
+            pid="$(pgrep -f focus_history_server-wrapped || true)"
+            if [ -n "$pid" ]; then kill -15 "$pid"; fi
+            # Start the server.
+            focus_history_server
+          '';
+        };
       });
 
       devShells = forAllSystems (system: let
@@ -49,7 +61,6 @@
             })
             poetry
           ];
-          
         };
       });
     };
