@@ -1,0 +1,27 @@
+# Get the device id
+id=""
+for col in $(xinput list | grep -i touchpad | xargs); do
+  if [[ "${col:0:3}" == "id=" ]]; then
+    id=${col:3}
+  fi
+done
+
+# Get the device state
+state=$(xinput list-props "${id}" | grep "Device Enabled" | grep -o "[01]$")
+
+case "$1" in
+  1|enable)
+    xinput enable "${id}"
+    ;;
+  0|disable)
+    xinput disable "${id}"
+    ;;
+  *)
+    # Toggle the device
+    if [ "${state}" == '1' ]; then
+      xinput disable "${id}"
+    else
+      xinput enable "${id}"
+    fi
+esac
+

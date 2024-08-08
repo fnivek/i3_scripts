@@ -47,6 +47,12 @@
             focus_history_server
           '';
         };
+        # Toggle touchpad
+        toggleTouchpad = pkgs.${system}.writeShellApplication {
+          name = "toggle-touchpad";
+          runtimeInputs = [];
+          text = "${builtins.readFile ./toggle-touchpad}";
+        };
       });
 
       devShells = forAllSystems (system: let
