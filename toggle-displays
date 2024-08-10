@@ -1,0 +1,74 @@
+# TODO(Kevin): Don't hardcode monitor names.
+#              probably best to just switch to someone elses solution.
+EXTERNAL_OUTPUT="DP-2-2"
+# EXTERNAL_OUTPUT="DP-2-1"
+# EXTERNAL_OUTPUT="HDMI-2"
+INTERNAL_OUTPUT="eDP-1"
+
+# Get all connected monitors
+connected=$(xrandr | grep " connected" | awk '{print $1}')
+for mon in $connected; do
+    if [[ "$mon" != "$INTERNAL_OUTPUT" ]]; then
+      EXTERNAL_OUTPUT="$mon"
+      break;
+    fi;
+done
+
+switch_to() {
+    case "$1" in
+        all)
+            xrandr --output "$INTERNAL_OUTPUT" --auto --output "$EXTERNAL_OUTPUT" --auto --right-of "$INTERNAL_OUTPUT"
+            ;;
+        clones)
+            xrandr --output "$INTERNAL_OUTPUT" --auto --output "$EXTERNAL_OUTPUT" --auto --same-as "$INTERNAL_OUTPUT"
+            ;;
+        internal)
+            xrandr --output "$INTERNAL_OUTPUT" --auto --output "$EXTERNAL_OUTPUT" --off
+            ;;
+        external)
+            xrandr --output "$INTERNAL_OUTPUT" --off --output "$EXTERNAL_OUTPUT" --auto
+            ;;
+    esac
+}
+
+# if we don't have a file, start at zero
+if [ ! -f "/tmp/monitor_mode.dat" ] ; then
+  monitor_mode="all"
+
+# otherwise read the value from the file
+else
+  monitor_mode=$(cat /tmp/monitor_mode.dat)
+fi
+
+case "$1" in
+    toggle)
+        if [ "$monitor_mode" = "all" ]; then
+                monitor_mode="external"
+        elif [ "$monitor_mode" = "external" ]; then
+            monitor_mode="internal"
+        elif [ "$monitor_mode" = "internal" ]; then
+            monitor_mode="clones"
+        else
+            monitor_mode="all"
+        fi
+        switch_to "${monitor_mode}"
+        ;;
+    all)
+        switch_to all
+        ;;
+    clones)
+        switch_to clones
+        ;;
+    internal)
+        switch_to internal
+        ;;
+    external)
+        switch_to external
+        ;;
+    *)
+        echo "Usage: $0 {toggle|all|clones|internal|external}"
+        exit 2
+        ;;
+esac
+echo "${monitor_mode}" > /tmp/monitor_mode.dat
+

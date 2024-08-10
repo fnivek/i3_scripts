@@ -53,6 +53,12 @@
           runtimeInputs = [];
           text = "${builtins.readFile ./toggle-touchpad}";
         };
+        # Toggle touchpad
+        toggleDisplays = pkgs.${system}.writeShellApplication {
+          name = "toggle-displays";
+          runtimeInputs = [];
+          text = "${builtins.readFile ./toggle-displays}";
+        };
       });
 
       devShells = forAllSystems (system: let
