@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
 import click
 import i3ipc
 
-# TODO(Kevin): Get these files from nix or make in /var /etc somewhere.
-workspace_file = "/home/kdfrench/.config/i3/resources/workspaces.txt"
-last_pose_in_workspace_file = "/home/kdfrench/.config/i3/resources/last_pose_in_workspace.txt"
+RESOURCE_DIR = Path(Path.home() / ".config" / "i3" / "resources")
+WORKSPACE_FILE = RESOURCE_DIR / "workspaces.txt"
+LAST_POSE_IN_WORKSPACE_FILE = RESOURCE_DIR / "last_pose_in_workspace.txt"
 
 
 def get_ws_second_key(ws):
@@ -27,12 +28,13 @@ def get_ws_third_key(ws):
 
 def read_last_workspace():
     last_workspace = {}
-    with open(last_pose_in_workspace_file) as file:
-        last_workspace = {workspace: int(num) for workspace, num in [line.strip().split(':') for line in file]}
+    if LAST_POSE_IN_WORKSPACE_FILE.exists():
+        with LAST_POSE_IN_WORKSPACE_FILE.open() as file:
+            last_workspace = {workspace: int(num) for workspace, num in [line.strip().split(':') for line in file]}
     return last_workspace
 
 def write_last_workspace(last_workspace):
-    with open(last_pose_in_workspace_file, 'w') as file:
+    with LAST_POSE_IN_WORKSPACE_FILE.open('w') as file:
         for key, value in last_workspace.items():
             file.write(f'{key}:{value}\n')
 
@@ -54,7 +56,7 @@ def main(workspace, move, follow):
 
     # Workspace files
     named_workspaces = []
-    with open(workspace_file) as file:
+    with WORKSPACE_FILE.open() as file:
         named_workspaces = [line.strip() for line in file]
     last_workspace = read_last_workspace()
 
